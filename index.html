@@ -172,7 +172,7 @@ console.log("Search results:", videos);
     const videoDetails = await getVideoDetails(videos);
 console.log("Video details:", videoDetails);
 const videoResults = document.getElementById("videoResults");
-videoResults.innerHTML = "<h2>1st 10 Related videos (from YT search)</h2>";
+videoResults.innerHTML = "<h2>1st 10 Related videos (searches Video Title in YT search)</h2>";
 
 videoDetails.forEach(video => {
   const videoId = video.id;
