@@ -10,7 +10,7 @@
   
 <input id="videoUrl" type="text" size="60">
   <button onclick="makeSearches()">Make related searches</button>
-
+<div id="player"></div>
   <div id="results"></div>
 
   <script>
@@ -34,7 +34,13 @@
   async function makeSearches() {
   const url = document.getElementById("videoUrl").value.trim();
   const videoId = getVideoId(url);
-
+document.getElementById("player").innerHTML =
+  '<iframe ' +
+  'src="https://www.youtube.com/embed/' + videoId + '" ' +
+  'title="YouTube video player" ' +
+  'style="width:100%; max-width:900px; aspect-ratio:16/9; border:0;" ' +
+  'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
+  'allowfullscreen></iframe>';
   if (!videoId) {
     alert("I couldn't recognize that YouTube URL.");
     return;
