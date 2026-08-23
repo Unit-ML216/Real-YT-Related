@@ -7,6 +7,13 @@
   <h1>Real YT Related</h1>
 
 <p>Paste a YouTube video URL:</p>
+  <hr>
+
+<p>Search YouTube:</p>
+
+<input id="searchQuery" type="text" size="60">
+
+<button onclick="runManualSearch()">Search</button>
   
 <input id="videoUrl" type="text" size="60">
   <button onclick="makeSearches()">Make related searches</button>
@@ -68,6 +75,52 @@ async function getVideoDetails(videos) {
   }
 
   return data.items || [];
+}
+
+async function runManualSearch() {
+  const query = document.getElementById("searchQuery").value.trim();
+
+  if (!query) {
+    return;
+  }
+
+  const videos = await searchYouTube(query);
+  const videoDetails = await getVideoDetails(videos);
+
+  const videoResults = document.getElementById("videoResults");
+  videoResults.innerHTML = "<h2>Search results</h2>";
+
+  videoDetails.forEach(video => {
+    const videoId = video.id;
+    const videoTitle = video.snippet.title;
+    const channel = video.snippet.channelTitle;
+    const views = Number(video.statistics.viewCount || 0).toLocaleString();
+    const published = new Date(video.snippet.publishedAt).toLocaleDateString();
+
+    const link = document.createElement("a");
+    link.href = "#";
+    link.textContent = videoTitle;
+
+    link.onclick = function(event) {
+      event.preventDefault();
+
+      document.getElementById("videoUrl").value =
+        "https://www.youtube.com/watch?v=" + videoId;
+
+      makeSearches();
+    };
+
+    const metadata = document.createElement("div");
+    metadata.textContent =
+      channel + " · " + views + " views · " + published;
+
+    const paragraph = document.createElement("p");
+    paragraph.appendChild(link);
+    paragraph.appendChild(document.createElement("br"));
+    paragraph.appendChild(metadata);
+
+    videoResults.appendChild(paragraph);
+  });
 }
     
   async function makeSearches() {
