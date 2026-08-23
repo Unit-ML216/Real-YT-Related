@@ -108,17 +108,27 @@ console.log("Video details:", videoDetails);
 const videoResults = document.getElementById("videoResults");
 videoResults.innerHTML = "<h2>Related videos</h2>";
 
-videos.forEach(video => {
-  const videoId = video.id.videoId;
+videoDetails.forEach(video => {
+  const videoId = video.id;
   const videoTitle = video.snippet.title;
+  const channel = video.snippet.channelTitle;
+  const views = Number(video.statistics.viewCount || 0).toLocaleString();
+  const published = new Date(video.snippet.publishedAt).toLocaleDateString();
 
   const link = document.createElement("a");
   link.href = "https://www.youtube.com/watch?v=" + videoId;
   link.textContent = videoTitle;
   link.target = "_blank";
 
+  const metadata = document.createElement("div");
+  metadata.textContent =
+    channel + " · " + views + " views · " + published;
+
   const paragraph = document.createElement("p");
   paragraph.appendChild(link);
+  paragraph.appendChild(document.createElement("br"));
+  paragraph.appendChild(metadata);
+
   videoResults.appendChild(paragraph);
 });
       const searches = [
