@@ -11,7 +11,6 @@
 <input id="videoUrl" type="text" size="60">
   <button onclick="makeSearches()">Make related searches</button>
 <div id="player"></div>
-  <div id="results"></div>
 <div id="videoResults"></div>
   <script>
     function getVideoId(url) {
@@ -131,28 +130,7 @@ videoDetails.forEach(video => {
 
   videoResults.appendChild(paragraph);
 });
-      const searches = [
-        title,
-        title + " gameplay",
-        title + " guide",
-        title + " analysis"
-      ];
-
-      const results = document.getElementById("results");
-      results.innerHTML = "<h2>Related searches</h2>";
-
-      searches.forEach(search => {
-        const link = document.createElement("a");
-        link.href =
-          "https://www.youtube.com/results?search_query=" +
-          encodeURIComponent(search);
-        link.textContent = search;
-        link.target = "_blank";
-
-        const paragraph = document.createElement("p");
-        paragraph.appendChild(link);
-        results.appendChild(paragraph);
-      });
+      
     }
     const YOUTUBE_API_KEY = "AIzaSyC4HKUt-PGeQX6Px58r3Hy6abOK6yFfBuU"
   </script>
