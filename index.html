@@ -61,7 +61,7 @@ async function getVideoDetails(videos) {
 
   const response = await fetch(
     "https://www.googleapis.com/youtube/v3/videos" +
-    "?part=snippet,statistics" +
+"?part=snippet,statistics,contentDetails" +
     "&id=" + encodeURIComponent(ids) +
     "&key=" + encodeURIComponent(YOUTUBE_API_KEY)
   );
@@ -75,7 +75,21 @@ async function getVideoDetails(videos) {
 
   return data.items || [];
 }
+function formatDuration(duration) {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
 
+  const hours = parseInt(match[1] || 0);
+  const minutes = parseInt(match[2] || 0);
+  const seconds = parseInt(match[3] || 0);
+
+  if (hours > 0) {
+    return hours + ":" +
+      String(minutes).padStart(2, "0") + ":" +
+      String(seconds).padStart(2, "0");
+  }
+
+  return minutes + ":" + String(seconds).padStart(2, "0");
+}
 async function runManualSearch() {
   const query = document.getElementById("searchQuery").value.trim();
 
@@ -95,6 +109,7 @@ async function runManualSearch() {
     const channel = video.snippet.channelTitle;
     const views = Number(video.statistics.viewCount || 0).toLocaleString();
     const published = new Date(video.snippet.publishedAt).toLocaleDateString();
+    const duration = formatDuration(video.contentDetails.duration);
 
     const link = document.createElement("a");
     link.href = "#";
@@ -110,9 +125,9 @@ async function runManualSearch() {
     };
 
     const metadata = document.createElement("div");
-    metadata.textContent =
-      channel + " · " + views + " views · " + published;
-
+   metadata.textContent =
+  channel + " · " + views + " views · " + published + " · " + duration;
+    
     const paragraph = document.createElement("p");
     paragraph.appendChild(link);
     paragraph.appendChild(document.createElement("br"));
@@ -157,7 +172,7 @@ console.log("Search results:", videos);
     const videoDetails = await getVideoDetails(videos);
 console.log("Video details:", videoDetails);
 const videoResults = document.getElementById("videoResults");
-videoResults.innerHTML = "<h2>Related videos</h2>";
+videoResults.innerHTML = "<h2>1st 10 Related videos (from YT search)</h2>";
 
 videoDetails.forEach(video => {
   const videoId = video.id;
@@ -165,6 +180,7 @@ videoDetails.forEach(video => {
   const channel = video.snippet.channelTitle;
   const views = Number(video.statistics.viewCount || 0).toLocaleString();
   const published = new Date(video.snippet.publishedAt).toLocaleDateString();
+  const duration = formatDuration(video.contentDetails.duration);
 
   const link = document.createElement("a");
 
@@ -181,8 +197,8 @@ link.onclick = function(event) {
 };
 
   const metadata = document.createElement("div");
-  metadata.textContent =
-    channel + " · " + views + " views · " + published;
+ metadata.textContent =
+  channel + " · " + views + " views · " + published + " · " + duration;
 
   const paragraph = document.createElement("p");
   paragraph.appendChild(link);
