@@ -5,6 +5,46 @@
 </head>
 <body>
   <h1>Real YT Related</h1>
-  <p>If you can see this, it works.</p>
+
+  <p>Paste a YouTube video title:</p>
+
+  <input id="videoTitle" type="text" size="60">
+
+  <button onclick="makeSearches()">Make related searches</button>
+
+  <div id="results"></div>
+
+  <script>
+    function makeSearches() {
+      const title = document.getElementById("videoTitle").value.trim();
+
+      if (!title) {
+        return;
+      }
+
+      const searches = [
+        title,
+        title + " gameplay",
+        title + " guide",
+        title + " analysis"
+      ];
+
+      const results = document.getElementById("results");
+      results.innerHTML = "<h2>Related searches</h2>";
+
+      searches.forEach(search => {
+        const link = document.createElement("a");
+        link.href =
+          "https://www.youtube.com/results?search_query=" +
+          encodeURIComponent(search);
+        link.textContent = search;
+        link.target = "_blank";
+
+        const paragraph = document.createElement("p");
+        paragraph.appendChild(link);
+        results.appendChild(paragraph);
+      });
+    }
+  </script>
 </body>
 </html>
