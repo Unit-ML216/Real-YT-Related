@@ -83,7 +83,22 @@ if (!data.items || data.items.length === 0) {
 const title = data.items[0].snippet.title;
     const videos = await searchYouTube(title);
 console.log("Search results:", videos);
+const videoResults = document.getElementById("videoResults");
+videoResults.innerHTML = "<h2>Related videos</h2>";
 
+videos.forEach(video => {
+  const videoId = video.id.videoId;
+  const videoTitle = video.snippet.title;
+
+  const link = document.createElement("a");
+  link.href = "https://www.youtube.com/watch?v=" + videoId;
+  link.textContent = videoTitle;
+  link.target = "_blank";
+
+  const paragraph = document.createElement("p");
+  paragraph.appendChild(link);
+  videoResults.appendChild(paragraph);
+});
       const searches = [
         title,
         title + " gameplay",
