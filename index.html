@@ -6,21 +6,55 @@
 <body>
   <h1>Real YT Related</h1>
 
-  <p>Paste a YouTube video title:</p>
-
-  <input id="videoTitle" type="text" size="60">
-
+<p>Paste a YouTube video URL:</p>
+  
+<input id="videoUrl" type="text" size="60">
   <button onclick="makeSearches()">Make related searches</button>
 
   <div id="results"></div>
 
   <script>
-    function makeSearches() {
-      const title = document.getElementById("videoTitle").value.trim();
+    function getVideoId(url) {
+  try {
+    const parsedUrl = new URL(url);
 
-      if (!title) {
-        return;
-      }
+    if (parsedUrl.hostname.includes("youtu.be")) {
+      return parsedUrl.pathname.slice(1);
+    }
+
+    if (parsedUrl.hostname.includes("youtube.com")) {
+      return parsedUrl.searchParams.get("v");
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+  async function makeSearches() {
+  const url = document.getElementById("videoUrl").value.trim();
+  const videoId = getVideoId(url);
+
+  if (!videoId) {
+    alert("I couldn't recognize that YouTube URL.");
+    return;
+  }
+
+    const response = await fetch(
+  "https://www.googleapis.com/youtube/v3/videos" +
+  "?part=snippet" +
+  "&id=" + encodeURIComponent(videoId) +
+  "&key=" + encodeURIComponent(YOUTUBE_API_KEY)
+);
+
+const data = await response.json();
+
+if (!data.items || data.items.length === 0) {
+  alert("I couldn't find that YouTube video.");
+  return;
+}
+
+const title = data.items[0].snippet.title;
 
       const searches = [
         title,
@@ -45,6 +79,7 @@
         results.appendChild(paragraph);
       });
     }
+    const youtube_api_key = "AIzaSyC4HKUt-PGeQX6Px58r3Hy6abOK6yFfBuU"
   </script>
 </body>
 </html>
