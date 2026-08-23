@@ -115,9 +115,18 @@ videoDetails.forEach(video => {
   const published = new Date(video.snippet.publishedAt).toLocaleDateString();
 
   const link = document.createElement("a");
-  link.href = "https://www.youtube.com/watch?v=" + videoId;
-  link.textContent = videoTitle;
-  link.target = "_blank";
+
+  link.href = "#";
+link.textContent = videoTitle;
+
+link.onclick = function(event) {
+  event.preventDefault();
+
+  document.getElementById("videoUrl").value =
+    "https://www.youtube.com/watch?v=" + videoId;
+
+  makeSearches();
+};
 
   const metadata = document.createElement("div");
   metadata.textContent =
